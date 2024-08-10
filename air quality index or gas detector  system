@@ -1,0 +1,50 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Initialize the LCD with the I2C address
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // Address 0x27, 16 columns, 2 rows
+
+// Define analog pin for MQ2 gas sensor
+const int MQ2_PIN = A0;
+
+void setup() {
+  // Initialize the LCD
+  lcd.init();
+  lcd.backlight();
+
+  // Print initial message on LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Gas Sensor IoT");
+  lcd.setCursor(0, 1);
+  lcd.print("Initializing...");
+
+  // Initialize serial communication
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Read analog value from MQ2 sensor
+  int sensorValue = analogRead(MQ2_PIN);
+
+  // Convert analog value to voltage (0-5V)
+  float voltage = sensorValue * (5.0 / 1023.0);
+
+  // Print sensor value and voltage to serial monitor
+  Serial.print("Sensor Value: ");
+  Serial.print(sensorValue);
+  Serial.print(", Voltage: ");
+  Serial.println(voltage);
+
+  // Display sensor value on LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Gas Sensor Value:");
+  lcd.setCursor(0, 1);
+  lcd.print(sensorValue);
+
+  // Add any additional processing or actions based on the sensor value here
+
+  // Delay before next reading
+  delay(1000); // Adjust delay as needed
+}
